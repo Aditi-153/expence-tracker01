@@ -6,7 +6,7 @@ export const addExpense = async (req, res) => {
 
     if (!title || !amount || !type || !category) {
       return res.status(400).json({
-        message: "All fields are required",
+        message: "all fields are required",
       });
     }
 
@@ -50,22 +50,21 @@ export const getExpenses = async (req, res) => {
 export const getExpense = async (req, res) => {
   try {
     const { id } = req.params;
-
     const expense = await Expense.findById(id);
 
     if (!expense) {
       return res.status(404).json({
-        message: "Expense not found",
+        message: "Not found",
       });
     }
 
     res.status(200).json({
-      message: "Expense fetched successfully",
+      message: "fetched successfully",
       expense,
     });
   } catch (error) {
     res.status(500).json({
-      message: "Failed to fetch expense",
+      message: "Failed",
       error: error.message,
     });
   }
@@ -101,17 +100,16 @@ export const updateExpense = async (req, res) => {
 export const deleteExpense = async (req, res) => {
   try {
     const { id } = req.params;
-
     const expense = await Expense.findByIdAndDelete(id);
 
     if (!expense) {
       return res.status(404).json({
-        message: "Expense not found",
+        message: "Not found",
       });
     }
 
     res.status(200).json({
-      message: "Expense deleted successfully",
+      message: "deleted successfully",
       expense,
     });
   } catch (error) {
