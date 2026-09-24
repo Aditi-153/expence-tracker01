@@ -1,67 +1,15 @@
-import { useEffect, useState, useMemo , useContext } from "react";
-import axios from "axios";
+import { useEffect, useState, useMemo, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
-
+import { ExpenseContext } from "../context/ExpenseContext";
 const Home = () => {
   const navigate = useNavigate();
-  const { expenses, setExpenses } = useContext(ExpenseContext);
-  const [loading, setLoading] = useState(true);
+  const { expenses, handleDelete, handleUpdate, fetchExpenses, loading } =
+    useContext(ExpenseContext);
   const [editExpense, setEditExpense] = useState(null);
 
   useEffect(() => {
-    const fetchExpenses = async () => {
-      try {
-        const response = await axios.get(import.meta.env.VITE_EXPENSE_DATA, {
-          withCredentials: true,
-        });
-
-        setExpenses(response.data);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchExpenses();
-  }, []);
-
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`${import.meta.env.VITE_EXPENSE_DATA}/${id}`, {
-        withCredentials: true,
-      });
-
-      setExpenses((preExpenses) =>
-        preExpenses.filter((expense) => expense._id !== id),
-      );
-    } catch (error) {
-      alert("failed to delete !", error);
-    }
-  };
-
-  const handleUpdate = async (id, updatedData) => {
-    try {
-      const response = await axios.patch(
-        `${import.meta.env.VITE_EXPENSE_DATA}/${id}`,
-        updatedData,
-        {
-          withCredentials: true,
-        },
-      );
-
-      setExpenses((prevExpenses) =>
-        prevExpenses.map((expense) =>
-          expense._id === id ? response.data.expense : expense,
-        ),
-      );
-
-      setEditExpense(null);
-    } catch (error) {
-      alert("failed to update !", error);
-    }
-  };
+  }, [fetchExpenses]);
 
   const totalIncome = useMemo(() => {
     return expenses
@@ -303,9 +251,10 @@ const Home = () => {
 
                     <div className="flex gap-3">
                       <button
-                        onClick={() =>
-                          handleUpdate(editExpense._id, editExpense)
-                        }
+                        onClick={async () => {
+                          await handleUpdate(editExpense._id, editExpense);
+                          navigate("/home");
+                        }}
                         className="flex-1 bg-black text-white py-3.5 rounded-xl font-semibold transition hover:bg-gray-800 active:scale-[0.98]"
                       >
                         Save Changes
