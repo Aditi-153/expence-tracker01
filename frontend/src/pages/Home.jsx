@@ -9,7 +9,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchExpenses();
-  }, [fetchExpenses]);
+  }, []);
 
   const totalIncome = useMemo(() => {
     return expenses
