@@ -1,10 +1,11 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo , useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
 
 const Home = () => {
   const navigate = useNavigate();
-  const [expenses, setExpenses] = useState([]);
+  const { expenses, setExpenses } = useContext(ExpenseContext);
   const [loading, setLoading] = useState(true);
   const [editExpense, setEditExpense] = useState(null);
 
@@ -76,7 +77,7 @@ const Home = () => {
 
   const balance = useMemo(() => {
     return totalIncome - totalExpense;
-  }, [totalIncome, totalExpense]);
+  }, [totalIncome, totalExpense]); ///////used useMemo to avoid recalculation
 
   return (
     <div className="min-h-screen bg-slate-100 p-6">
